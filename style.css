@@ -1,0 +1,142 @@
+:root {
+  --red: #e81e2d;
+  --red-soft: #ff5566;
+  --red-deep: #8f0a1c;
+  --black: #000;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(ellipse at 50% 45%, #140004 0%, var(--black) 62%);
+  color: var(--red);
+  font-family: "Segoe Script", "Brush Script MT", "Snell Roundhand", Georgia, serif;
+  overflow: hidden;
+  touch-action: none;
+}
+
+#sparkles {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.stage {
+  position: fixed;
+  inset: 0;
+  perspective: 1100px;
+  perspective-origin: 50% 48%;
+  cursor: grab;
+}
+
+.stage.is-dragging {
+  cursor: grabbing;
+}
+
+/* Rotated by pointer drag; children keep their own depth so the tilt reads as 3D space. */
+.world {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.float {
+  position: absolute;
+  left: var(--x, 50%);
+  top: 0;
+  will-change: transform, opacity;
+  animation: var(--dur, 9s) linear both var(--delay, 0s) rise;
+}
+
+.depth {
+  transform-style: preserve-3d;
+  transform: translateZ(var(--z, 0px));
+}
+
+.line {
+  display: block;
+  white-space: nowrap;
+  font-weight: 700;
+  font-size: calc(var(--size, 26px) * var(--scale, 1));
+  line-height: 1.15;
+  color: var(--tint, var(--red));
+  opacity: var(--alpha, 1);
+  text-shadow:
+    0 0 6px rgba(255, 60, 80, 0.7),
+    0 0 20px rgba(232, 30, 45, 0.45),
+    0 0 46px rgba(143, 10, 28, 0.4);
+}
+
+.line--hero {
+  font-size: calc(var(--size, 26px) * var(--scale, 1) * 1.9);
+  color: var(--red-soft);
+  text-shadow:
+    0 0 10px rgba(255, 120, 135, 0.9),
+    0 0 32px rgba(232, 30, 45, 0.65),
+    0 0 76px rgba(143, 10, 28, 0.55);
+}
+
+.hint {
+  position: absolute;
+  bottom: 18px;
+  left: 0;
+  right: 0;
+  margin: 0;
+  text-align: center;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #6d1220;
+  user-select: none;
+  pointer-events: none;
+}
+
+@keyframes rise {
+  0% {
+    transform: translate3d(-50%, 108vh, 0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  88% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(-50%, -22vh, 0);
+    opacity: 0;
+  }
+}
+
+body.is-paused .float {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage {
+    cursor: default;
+    perspective: none;
+  }
+
+  .world {
+    transform: none !important;
+  }
+
+  .float {
+    animation: none;
+    top: 50%;
+    opacity: 0.9;
+  }
+}
